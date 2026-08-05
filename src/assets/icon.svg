@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title description">
+  <title id="title">海报机 PagePoster</title>
+  <desc id="description">深绿色圆角方形中的米白海报纸张，带朱红装订线与折角</desc>
+  <defs>
+    <linearGradient id="base" x1="16" y1="10" x2="112" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#234f49"/>
+      <stop offset="1" stop-color="#102f2c"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#071b19" flood-opacity=".34"/>
+    </filter>
+  </defs>
+
+  <rect x="4" y="4" width="120" height="120" rx="29" fill="url(#base)"/>
+  <rect x="6.5" y="6.5" width="115" height="115" rx="26.5" fill="none" stroke="#f4f0e6" stroke-opacity=".18"/>
+
+  <g filter="url(#shadow)">
+    <path d="M31 19h49l21 21v67a5 5 0 0 1-5 5H31a5 5 0 0 1-5-5V24a5 5 0 0 1 5-5Z" fill="#f4f0e6"/>
+    <path d="M80 19v17a6 6 0 0 0 6 6h15L80 19Z" fill="#df513a"/>
+    <rect x="26" y="19" width="13" height="93" rx="5" fill="#ef5a3e"/>
+    <rect x="49" y="47" width="36" height="9" rx="4.5" fill="#173d39"/>
+    <rect x="49" y="65" width="42" height="8" rx="4" fill="#173d39" fill-opacity=".88"/>
+    <rect x="49" y="82" width="30" height="8" rx="4" fill="#173d39" fill-opacity=".65"/>
+    <circle cx="91" cy="96" r="8" fill="#d9a718"/>
+    <path d="m87.5 96 2.4 2.5 4.8-5.2" fill="none" stroke="#fff8e8" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

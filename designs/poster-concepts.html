@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PagePoster 视觉方向探索</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        color: #17201f;
+        background: #d8d7d1;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: linear-gradient(180deg, #ebeae5, #d2d1cb); }
+      button { font: inherit; }
+      .page { width: min(1240px, calc(100% - 40px)); margin: 0 auto; padding: 72px 0 100px; }
+      .page-head { display: grid; grid-template-columns: 1fr minmax(280px, 420px); gap: 48px; align-items: end; margin-bottom: 42px; }
+      .page-kicker { margin: 0 0 12px; color: #e04e34; font-size: 12px; font-weight: 850; letter-spacing: .22em; }
+      .page h1 { max-width: 820px; margin: 0; font-size: clamp(38px, 4.3vw, 58px); line-height: 1; letter-spacing: -.065em; }
+      .page-intro { margin: 0; color: #596260; font-size: 15px; line-height: 1.8; }
+      .selection-status { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.62); color: #46504e; font-size: 13px; }
+      .selection-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #e04e34; }
+      .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+      .concept { padding: 18px; border: 1px solid rgba(255,255,255,.8); border-radius: 28px; background: rgba(245,244,239,.72); box-shadow: 0 24px 70px rgba(38,44,42,.1); transition: transform .25s, box-shadow .25s, border-color .25s; }
+      .concept:hover { transform: translateY(-4px); box-shadow: 0 30px 80px rgba(38,44,42,.15); }
+      .concept.is-selected { border-color: #e35137; box-shadow: 0 0 0 4px rgba(227,81,55,.14), 0 30px 80px rgba(38,44,42,.15); }
+      .concept-meta { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 4px 4px 16px; }
+      .concept-no { display: block; margin-bottom: 4px; color: #e35137; font-size: 11px; font-weight: 850; letter-spacing: .16em; }
+      .concept h2 { margin: 0; font-size: 21px; letter-spacing: -.03em; }
+      .concept-meta p { max-width: 250px; margin: 3px 0 0; color: #77807e; font-size: 12px; line-height: 1.55; }
+      .choose { flex: 0 0 auto; border: 1px solid #cfd2cd; border-radius: 999px; padding: 9px 13px; background: #fff; color: #4f5856; cursor: pointer; font-size: 12px; font-weight: 750; }
+      .is-selected .choose { border-color: #e35137; background: #e35137; color: white; }
+      .poster { position: relative; overflow: hidden; width: 100%; aspect-ratio: 3 / 4; container-type: inline-size; isolation: isolate; }
+      .poster img { display: block; }
+
+      /* 01 Swiss editorial */
+      .swiss { background: #f4f0e6; color: #111512; }
+      .swiss::before { content: ""; position: absolute; inset: 0 auto 0 7%; width: 1px; background: rgba(17,21,18,.16); }
+      .swiss::after { content: ""; position: absolute; right: -9%; top: 6%; width: 38%; aspect-ratio: 1; border: 1px solid rgba(17,21,18,.18); border-radius: 50%; box-shadow: 0 0 0 3cqw #f4f0e6, 0 0 0 calc(3cqw + 1px) rgba(17,21,18,.14), 0 0 0 7cqw #f4f0e6, 0 0 0 calc(7cqw + 1px) rgba(17,21,18,.12); z-index: -1; }
+      .swiss-accent { position: absolute; left: 0; top: 0; width: 2.2%; height: 100%; background: #ec5138; }
+      .swiss-index { position: absolute; left: 10%; top: 5.2%; color: #ec5138; font-size: 2.2cqw; font-weight: 900; letter-spacing: .22em; }
+      .swiss-title { position: absolute; left: 10%; top: 10%; width: 78%; margin: 0; font-family: Arial, sans-serif; font-size: 10.8cqw; line-height: .83; letter-spacing: -.085em; text-transform: uppercase; }
+      .swiss-title span { display: block; color: #ec5138; }
+      .swiss-deck { position: absolute; left: 10%; top: 29%; width: 57%; margin: 0; font-size: 3.35cqw; line-height: 1.47; font-weight: 680; }
+      .swiss-ai { position: absolute; left: 10%; top: 43%; padding: .7cqw 1.4cqw; background: #111512; color: #fff; font-size: 1.85cqw; font-weight: 850; letter-spacing: .08em; }
+      .swiss-points { position: absolute; left: 10%; right: 7%; top: 49%; margin: 0; padding: 0; list-style: none; border-top: .25cqw solid #111512; }
+      .swiss-points li { display: grid; grid-template-columns: 7cqw 1fr; gap: 2cqw; padding: 2.1cqw 0; border-bottom: 1px solid rgba(17,21,18,.25); font-size: 2.35cqw; line-height: 1.42; font-weight: 630; }
+      .swiss-points b { color: #ec5138; font-family: Arial, sans-serif; font-size: 4.2cqw; line-height: 1; letter-spacing: -.06em; }
+      .swiss-foot { position: absolute; left: 10%; right: 7%; bottom: 5%; display: flex; align-items: end; justify-content: space-between; }
+      .swiss-source small { display: block; margin-bottom: .5cqw; font-size: 1.65cqw; letter-spacing: .1em; }
+      .swiss-source strong { font-size: 2.8cqw; }
+      .swiss .qr { width: 14cqw; padding: 1cqw; background: #fff; border: .25cqw solid #111512; }
+
+      /* 02 Dark signal */
+      .signal { color: #e8f9d2; background-color: #071712; background-image: linear-gradient(rgba(118,255,168,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(118,255,168,.055) 1px, transparent 1px), radial-gradient(circle at 78% 14%, rgba(89,255,168,.18), transparent 26%); background-size: 5cqw 5cqw, 5cqw 5cqw, auto; }
+      .signal-orbit { position: absolute; right: -13%; top: -7%; width: 54%; aspect-ratio: 1; border: 1px solid rgba(154,255,98,.45); border-radius: 50%; box-shadow: 0 0 0 4cqw rgba(7,23,18,.7), 0 0 0 calc(4cqw + 1px) rgba(154,255,98,.28), 0 0 0 9cqw rgba(7,23,18,.55), 0 0 0 calc(9cqw + 1px) rgba(154,255,98,.15); }
+      .signal-brand { position: absolute; left: 7%; top: 5%; font: 750 1.8cqw ui-monospace, monospace; letter-spacing: .16em; color: #9aff62; }
+      .signal-status { position: absolute; right: 7%; top: 5%; display: flex; gap: .8cqw; align-items: center; font: 650 1.6cqw ui-monospace, monospace; }
+      .signal-status::before { content: ""; width: 1.3cqw; aspect-ratio: 1; border-radius: 50%; background: #9aff62; box-shadow: 0 0 1.6cqw #9aff62; }
+      .signal-title { position: absolute; left: 7%; top: 12%; width: 78%; margin: 0; font: 820 8.7cqw/.92 Arial, sans-serif; letter-spacing: -.07em; color: #fff; }
+      .signal-title em { color: #9aff62; font-style: normal; }
+      .signal-summary { position: absolute; left: 7%; right: 7%; top: 29%; padding: 3cqw; border: 1px solid rgba(154,255,98,.38); background: rgba(7,35,27,.72); box-shadow: inset 0 0 0 1px rgba(255,255,255,.025), 0 2cqw 7cqw rgba(0,0,0,.24); backdrop-filter: blur(8px); }
+      .signal-summary span { display: block; margin-bottom: 1cqw; color: #9aff62; font: 800 1.7cqw ui-monospace, monospace; letter-spacing: .12em; }
+      .signal-summary p { margin: 0; color: #e5f2e4; font-size: 3.1cqw; line-height: 1.5; font-weight: 650; }
+      .signal-points { position: absolute; left: 7%; right: 7%; top: 50%; display: grid; gap: 1.5cqw; }
+      .signal-point { display: grid; grid-template-columns: 5cqw 1fr; gap: 2cqw; padding: 1.8cqw 2cqw; border-left: .55cqw solid #9aff62; background: linear-gradient(90deg, rgba(154,255,98,.12), rgba(154,255,98,.025)); }
+      .signal-point b { font: 800 1.9cqw ui-monospace, monospace; color: #9aff62; }
+      .signal-point p { margin: 0; color: #d6e3d9; font-size: 2.25cqw; line-height: 1.45; }
+      .signal-foot { position: absolute; left: 7%; right: 7%; bottom: 5%; display: flex; align-items: end; justify-content: space-between; border-top: 1px solid rgba(154,255,98,.3); padding-top: 2.2cqw; }
+      .signal-domain { color: white; font: 750 2.45cqw ui-monospace, monospace; }
+      .signal-foot small { display: block; margin-top: .7cqw; color: #7f9e8c; font-size: 1.55cqw; }
+      .signal .qr { width: 14cqw; padding: .8cqw; background: #e8f9d2; box-shadow: 0 0 3cqw rgba(154,255,98,.18); }
+
+      /* 03 Collage */
+      .collage { background-color: #ead9b9; background-image: radial-gradient(rgba(86,61,41,.11) .08cqw, transparent .1cqw); background-size: 1.7cqw 1.7cqw; color: #1c2525; }
+      .collage-blue { position: absolute; left: -6%; right: -4%; top: -4%; height: 31%; background: #155c72; transform: rotate(-3deg); box-shadow: 0 2cqw 0 #e9533b; }
+      .collage-stamp { position: absolute; right: 5%; top: 4%; transform: rotate(7deg); padding: 1cqw 1.5cqw; border: .3cqw solid #ffdf70; color: #ffdf70; font: 850 1.7cqw ui-monospace, monospace; letter-spacing: .11em; }
+      .collage-title { position: absolute; left: 7%; top: 9%; width: 82%; margin: 0; transform: rotate(-2deg); color: #fff8e8; font-family: Georgia, "Times New Roman", serif; font-size: 8.7cqw; line-height: .93; letter-spacing: -.055em; text-shadow: .5cqw .5cqw 0 rgba(0,0,0,.16); }
+      .collage-summary { position: absolute; left: 7%; right: 8%; top: 30%; padding: 3.3cqw 3.2cqw; transform: rotate(1.2deg); background: #fff9e9; box-shadow: 1.2cqw 1.4cqw 0 rgba(54,38,26,.16); }
+      .collage-summary::before, .collage-summary::after { content: ""; position: absolute; top: -1.5cqw; width: 8cqw; height: 3cqw; background: rgba(255,224,154,.75); }
+      .collage-summary::before { left: 9%; transform: rotate(-5deg); }
+      .collage-summary::after { right: 9%; transform: rotate(6deg); }
+      .collage-summary b { display: block; margin-bottom: 1cqw; color: #e9533b; font-size: 1.85cqw; letter-spacing: .08em; }
+      .collage-summary p { margin: 0; font-size: 3.05cqw; line-height: 1.5; font-weight: 720; }
+      .collage-points { position: absolute; left: 8%; right: 7%; top: 51%; display: grid; gap: 2.1cqw; }
+      .collage-point { position: relative; padding-left: 7cqw; font-size: 2.35cqw; line-height: 1.5; font-weight: 650; }
+      .collage-point b { position: absolute; left: 0; top: -.5cqw; display: grid; place-items: center; width: 5cqw; aspect-ratio: 1; border-radius: 50%; background: #e9533b; color: #fff; font: 850 1.8cqw Arial, sans-serif; transform: rotate(-8deg); }
+      .collage-point:nth-child(2) b { background: #155c72; transform: rotate(7deg); }
+      .collage-point:nth-child(3) b { background: #d9a718; transform: rotate(-4deg); }
+      .collage-point::after { content: ""; display: block; width: 88%; height: .55cqw; margin-top: .7cqw; background: rgba(233,83,59,.28); transform: rotate(-1deg); }
+      .collage-foot { position: absolute; left: 8%; right: 7%; bottom: 5%; display: flex; align-items: end; justify-content: space-between; }
+      .collage-source { font-family: Georgia, serif; }
+      .collage-source small { display: block; margin-bottom: .6cqw; color: #75654f; font-family: inherit; font-size: 1.65cqw; }
+      .collage-source strong { font-size: 3cqw; }
+      .collage .qr-wrap { position: relative; padding: 1.3cqw; background: #fffdf5; box-shadow: .8cqw 1cqw 0 rgba(54,38,26,.18); transform: rotate(2deg); }
+      .collage .qr-wrap::before { content: "SCAN ME"; position: absolute; top: -2.3cqw; left: .5cqw; color: #e9533b; font: 850 1.4cqw ui-monospace, monospace; }
+      .collage .qr { width: 13cqw; }
+
+      /* 04 Ink editorial */
+      .ink { background: #f6f2e7; color: #1d2422; }
+      .ink::before { content: ""; position: absolute; inset: 0; opacity: .35; background-image: repeating-linear-gradient(0deg, transparent 0 1.5cqw, rgba(64,53,41,.035) 1.55cqw 1.65cqw); z-index: -1; }
+      .ink-redline { position: absolute; left: 7%; top: 0; width: 1.2%; height: 100%; background: #b93d2a; }
+      .ink-watermark { position: absolute; right: -1%; top: 3%; writing-mode: vertical-rl; color: rgba(29,36,34,.055); font-family: "Songti SC", Georgia, serif; font-size: 12cqw; line-height: .8; letter-spacing: -.12em; }
+      .ink-brand { position: absolute; left: 11%; top: 5%; color: #b93d2a; font-family: "Songti SC", Georgia, serif; font-size: 2cqw; font-weight: 800; letter-spacing: .22em; }
+      .ink-title { position: absolute; left: 11%; top: 11%; width: 78%; margin: 0; font-family: "Songti SC", Georgia, serif; font-size: 9cqw; line-height: 1; letter-spacing: -.06em; }
+      .ink-rule { position: absolute; left: 11%; top: 24%; width: 12%; height: .6cqw; background: #b93d2a; }
+      .ink-summary { position: absolute; left: 11%; right: 10%; top: 29%; }
+      .ink-summary span { display: block; margin-bottom: 1.4cqw; color: #8c9591; font-size: 1.7cqw; font-weight: 750; letter-spacing: .16em; }
+      .ink-summary p { margin: 0; font-family: "Songti SC", Georgia, serif; font-size: 3.8cqw; line-height: 1.5; font-weight: 700; }
+      .ink-summary p::before { content: "“"; position: absolute; left: -4.4cqw; top: -2.4cqw; color: rgba(185,61,42,.25); font: 900 9cqw Georgia, serif; }
+      .ink-points { position: absolute; left: 11%; right: 9%; top: 49%; margin: 0; padding: 0; list-style: none; counter-reset: ink; }
+      .ink-points li { counter-increment: ink; position: relative; padding: 2cqw 0 2cqw 8cqw; border-top: 1px solid rgba(29,36,34,.2); font-size: 2.35cqw; line-height: 1.5; font-weight: 590; }
+      .ink-points li::before { content: "〇" counter(ink); position: absolute; left: 0; top: 1.75cqw; color: #b93d2a; font-family: "Songti SC", Georgia, serif; font-size: 2.2cqw; font-weight: 800; }
+      .ink-points li:last-child { border-bottom: 1px solid rgba(29,36,34,.2); }
+      .ink-foot { position: absolute; left: 11%; right: 9%; bottom: 5%; display: flex; align-items: end; justify-content: space-between; }
+      .ink-source small { display: block; margin-bottom: .65cqw; color: #818985; font-size: 1.55cqw; letter-spacing: .1em; }
+      .ink-source strong { font-family: Georgia, serif; font-size: 2.9cqw; }
+      .ink .qr-frame { padding: 1.1cqw; border: .35cqw solid #b93d2a; background: #fff; }
+      .ink .qr { width: 13.5cqw; }
+      .ink-seal { position: absolute; left: 11%; bottom: 5.4%; width: 5.5cqw; aspect-ratio: 1; display: grid; place-items: center; transform: translateX(24cqw) rotate(-4deg); border: .35cqw solid #b93d2a; color: #b93d2a; font-family: "Songti SC", serif; font-size: 1.4cqw; line-height: 1.05; font-weight: 850; }
+
+      @media (max-width: 900px) {
+        .page { width: min(620px, calc(100% - 24px)); padding-top: 44px; }
+        .page-head, .gallery { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="page-head">
+        <div>
+          <p class="page-kicker">PAGEPOSTER · VISUAL STUDY</p>
+          <h1>同一篇文章，四种海报语言</h1>
+        </div>
+        <div>
+          <p class="page-intro">先比较视觉气质，不急着改扩展。四个方向使用完全相同的信息，差异来自字体、网格、色彩、留白和装饰语言。</p>
+          <div class="selection-status" id="selectionStatus">尚未选择方向</div>
+        </div>
+      </header>
+
+      <section class="gallery">
+        <article class="concept" data-name="瑞士编辑">
+          <header class="concept-meta">
+            <div><span class="concept-no">DIRECTION 01</span><h2>瑞士编辑</h2><p>理性、强网格、信息效率高；适合技术与商业内容。</p></div>
+            <button class="choose" type="button">选择</button>
+          </header>
+          <div class="poster swiss">
+            <div class="swiss-accent"></div><div class="swiss-index">AI EDITORIAL / 2026</div>
+            <h3 class="swiss-title">WRITE–ONLY <span>CODE</span></h3>
+            <p class="swiss-deck">AI 加速软件迈向“只写代码”，工程师需要重新构建信任机制。</p>
+            <div class="swiss-ai">AI 内容摘要</div>
+            <ol class="swiss-points">
+              <li><b>01</b><span>代码生产越过人工审查极限，自动化信任体系成为新的基础设施。</span></li>
+              <li><b>02</b><span>工程师转向系统设计与约束制定，核心是界定边界并管控风险。</span></li>
+              <li><b>03</b><span>行业需要适应大规模不可读代码的新控制机制与问责原语。</span></li>
+            </ol>
+            <footer class="swiss-foot"><div class="swiss-source"><small>CONTENT BY AI · SOURCE</small><strong>heavybit.com</strong></div><img class="qr" src="qr.svg" alt="原文二维码" /></footer>
+          </div>
+        </article>
+
+        <article class="concept" data-name="夜间信号">
+          <header class="concept-meta">
+            <div><span class="concept-no">DIRECTION 02</span><h2>夜间信号</h2><p>数字、未来、系统感强；最贴合 AI 与开发者主题。</p></div>
+            <button class="choose" type="button">选择</button>
+          </header>
+          <div class="poster signal">
+            <div class="signal-orbit"></div><div class="signal-brand">PAGEPOSTER://BRIEF</div><div class="signal-status">AI READY</div>
+            <h3 class="signal-title">WRITE_<br /><em>ONLY</em>_CODE</h3>
+            <section class="signal-summary"><span>01 / SYNTHESIS</span><p>AI 加速软件迈向“只写代码”，人类不再逐行审查，工程师需要重新构建可信系统。</p></section>
+            <div class="signal-points">
+              <div class="signal-point"><b>[01]</b><p>自动化信任体系将替代依赖人工审核的旧工作流。</p></div>
+              <div class="signal-point"><b>[02]</b><p>工程师的角色转向系统设计、边界定义与风险控制。</p></div>
+              <div class="signal-point"><b>[03]</b><p>不可读代码需要新的控制机制与问责原语。</p></div>
+            </div>
+            <footer class="signal-foot"><div><div class="signal-domain">heavybit.com</div><small>SCAN TO READ ORIGINAL</small></div><img class="qr" src="qr.svg" alt="原文二维码" /></footer>
+          </div>
+        </article>
+
+        <article class="concept" data-name="拼贴杂志">
+          <header class="concept-meta">
+            <div><span class="concept-no">DIRECTION 03</span><h2>拼贴杂志</h2><p>活泼、有手感、社交属性强；更像小红书与杂志内页。</p></div>
+            <button class="choose" type="button">选择</button>
+          </header>
+          <div class="poster collage">
+            <div class="collage-blue"></div><div class="collage-stamp">AI / BRIEF</div><h3 class="collage-title">Write-Only<br />Code</h3>
+            <section class="collage-summary"><b>一句话看懂</b><p>当 AI 生成的代码多到没人能逐行阅读，我们要如何重新建立信任？</p></section>
+            <div class="collage-points">
+              <div class="collage-point"><b>1</b>代码生产已经越过人工审查极限，自动化信任成为必要条件。</div>
+              <div class="collage-point"><b>2</b>工程师将更多负责系统设计、边界定义和风险控制。</div>
+              <div class="collage-point"><b>3</b>未来需要管理不可读代码的新控制机制与问责方式。</div>
+            </div>
+            <footer class="collage-foot"><div class="collage-source"><small>内容由 AI 根据原文整理</small><strong>heavybit.com</strong></div><div class="qr-wrap"><img class="qr" src="qr.svg" alt="原文二维码" /></div></footer>
+          </div>
+        </article>
+
+        <article class="concept" data-name="东方编辑">
+          <header class="concept-meta">
+            <div><span class="concept-no">DIRECTION 04</span><h2>东方编辑</h2><p>克制、文化、高级留白；适合观点、阅读与深度内容。</p></div>
+            <button class="choose" type="button">选择</button>
+          </header>
+          <div class="poster ink">
+            <div class="ink-redline"></div><div class="ink-watermark">只写代码</div><div class="ink-brand">海报机 · 人工智能摘要</div>
+            <h3 class="ink-title">Write-Only<br />Code</h3><div class="ink-rule"></div>
+            <section class="ink-summary"><span>核心观点</span><p>当代码变得不可逐行阅读，信任必须从“看过”转向“系统能够证明”。</p></section>
+            <ol class="ink-points">
+              <li>模型能力提升使代码生产越过人工审查极限。</li>
+              <li>工程师的重心转向系统设计、边界与风险。</li>
+              <li>新控制机制将成为不可读代码时代的基础。</li>
+            </ol>
+            <footer class="ink-foot"><div class="ink-source"><small>来源 · 内容由 AI 整理</small><strong>heavybit.com</strong></div><div class="qr-frame"><img class="qr" src="qr.svg" alt="原文二维码" /></div></footer><div class="ink-seal">海<br />报</div>
+          </div>
+        </article>
+      </section>
+    </main>
+    <script>
+      const cards = [...document.querySelectorAll('.concept')];
+      const status = document.querySelector('#selectionStatus');
+      cards.forEach((card) => card.querySelector('.choose').addEventListener('click', () => {
+        cards.forEach((item) => { item.classList.remove('is-selected'); item.querySelector('.choose').textContent = '选择'; });
+        card.classList.add('is-selected'); card.querySelector('.choose').textContent = '已选择';
+        status.textContent = `当前偏好：${card.dataset.name}`;
+      }));
+    </script>
+  </body>
+</html>

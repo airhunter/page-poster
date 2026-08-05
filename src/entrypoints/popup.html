@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>生成分享海报</title>
+    <link rel="stylesheet" href="../popup/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <img src="/icons/icon-32.png" alt="" width="34" height="34" />
+          <div><h1>海报机</h1><p>PAGEPOSTER</p></div>
+        </div>
+        <button class="icon-button" id="settingsButton" title="打开设置" aria-label="打开设置">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.09a2 2 0 0 1 1 1.74v.5a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
+      </header>
+
+      <section class="panel message-panel idle-panel" id="idleView">
+        <div class="message-icon idle-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M8 8h8M8 11.5h5M8 16h3M16 15.5v3M14.5 17h3"/></svg>
+        </div>
+        <h2>为当前页面生成海报</h2>
+        <p id="pageLabel">当前页面</p>
+        <button class="primary-button message-action" id="generateButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2 14 8l4.8 2-4.8 2-2 4.8-2-4.8-4.8-2L10 8l2-4.8Z"/><path d="M17.5 15.5v5M15 18h5"/></svg>生成海报
+        </button>
+      </section>
+
+      <section class="panel loading-panel is-hidden" id="loadingView">
+        <header class="panel-heading"><span><i></i>正在制作</span><b>01—04</b></header>
+        <div class="poster-skeleton" aria-hidden="true">
+          <div class="skeleton-rail"></div>
+          <div class="skeleton-kicker"></div>
+          <div class="skeleton-title"></div>
+          <div class="skeleton-title short"></div>
+          <div class="skeleton-summary"></div>
+          <div class="skeleton-row row-one"></div><div class="skeleton-row row-two"></div><div class="skeleton-row row-three"></div>
+          <div class="skeleton-qr"></div>
+        </div>
+        <div class="progress-copy">
+          <span class="pulse" aria-hidden="true"></span>
+          <div><p class="stage-label" id="stageLabel">正在提取正文</p></div>
+        </div>
+        <button class="text-button" id="cancelLoadingButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg>取消生成
+        </button>
+      </section>
+
+      <section class="panel preview-panel is-hidden" id="previewView">
+        <header class="panel-heading"><span><i class="ready"></i>海报已就绪</span><b>3:4 · PNG</b></header>
+        <div class="preview-frame" id="posterMount"></div>
+        <div class="primary-actions">
+          <button class="primary-button" id="copyButton">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+            复制海报
+          </button>
+          <button class="secondary-button" id="regenerateButton" title="重新生成摘要">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8V4m0 0h-4m4 0-3.2 3.2A7 7 0 1 0 18.5 15"/></svg>
+            换一版
+          </button>
+        </div>
+        <button class="download-button is-hidden" id="downloadButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/></svg>下载 PNG
+        </button>
+        <button class="text-button" id="cancelPreviewButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg>关闭
+        </button>
+      </section>
+
+      <section class="panel message-panel is-hidden" id="errorView">
+        <div class="message-icon error-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 3.7 19h16.6L12 4Z"/><path d="M12 9v4.5M12 16.5h.01"/></svg>
+        </div>
+        <h2>这次没有生成成功</h2>
+        <p id="errorMessage">请稍后重试。</p>
+        <button class="primary-button message-action" id="retryButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8V4m0 0h-4m4 0-3.2 3.2A7 7 0 1 0 18.5 15"/></svg>重新生成
+        </button>
+      </section>
+
+      <section class="panel message-panel is-hidden" id="configView">
+        <div class="message-icon key-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="11.5" r="4.5"/><path d="m12 14.5 7.5 0M17 14.5v3M14.5 14.5v2"/></svg>
+        </div>
+        <h2>先连接你的 AI</h2>
+        <p>配置一个兼容接口，即可开始把当前文章制作成分享海报。</p>
+        <button class="primary-button message-action" id="openConfigButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h9l3 3v13H6V4Z"/><path d="M9 11h6M9 15h4"/></svg>打开设置
+        </button>
+      </section>
+
+      <div class="toast is-hidden" id="toast" role="status"></div>
+    </main>
+    <script type="module" src="../popup/index.ts"></script>
+  </body>
+</html>

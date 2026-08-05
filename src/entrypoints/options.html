@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="manifest.open_in_tab" content="true" />
+    <title>海报机设置</title>
+    <link rel="stylesheet" href="../options/styles.css" />
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header class="settings-hero">
+        <div class="brand-lockup">
+          <img src="/icons/icon-48.png" alt="" width="42" height="42" />
+          <div><strong>海报机</strong><span>PAGEPOSTER</span></div>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">SETTINGS</p>
+          <h1>把好内容，排成<br />值得分享的海报。</h1>
+          <p class="intro">连接模型，选择你的海报风格。</p>
+        </div>
+      </header>
+
+      <aside class="save-dock" aria-label="保存全部设置">
+        <div><strong>全部设置</strong><small>模型连接 · 海报风格</small></div>
+        <button type="submit" form="settingsForm" id="saveButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4Z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/></svg><span id="saveButtonLabel">保存并关闭</span>
+        </button>
+      </aside>
+
+      <form class="settings-card" id="settingsForm">
+        <section class="form-section">
+          <header class="section-head">
+            <span class="section-number">01</span>
+            <div><h2>模型连接</h2></div>
+          </header>
+
+          <div class="connection-grid">
+            <label class="field field-wide">
+              <span class="field-label"><strong>API 地址</strong><em>BASE URL</em></span>
+              <span class="input-shell">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.8 12h16.4M12 3.5c2.3 2.4 3.5 5.3 3.5 8.5S14.3 18.1 12 20.5C9.7 18.1 8.5 15.2 8.5 12S9.7 5.9 12 3.5Z"/></svg>
+                <input id="apiBaseUrl" type="url" required placeholder="https://api.openai.com/v1" />
+              </span>
+            </label>
+
+            <label class="field">
+              <span class="field-label"><strong>API Key</strong><em>SECRET</em></span>
+              <span class="input-shell">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="11.5" r="4.5"/><path d="m12 14.5 7.5 0M17 14.5v3M14.5 14.5v2"/></svg>
+                <input id="apiKey" type="password" autocomplete="off" placeholder="sk-…" />
+                <button class="input-action" type="button" id="toggleKeyButton" aria-label="显示 API Key" aria-pressed="false">
+                  <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 12s3.3-5.3 9.2-5.3 9.2 5.3 9.2 5.3-3.3 5.3-9.2 5.3S2.8 12 2.8 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+                  <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 4 16 16M9.6 7c.8-.2 1.6-.3 2.4-.3 5.9 0 9.2 5.3 9.2 5.3a17.6 17.6 0 0 1-2.4 2.9M6.3 8.2A15.3 15.3 0 0 0 2.8 12s3.3 5.3 9.2 5.3c1 0 1.9-.1 2.7-.4M10.2 10.2a2.6 2.6 0 0 0 3.6 3.6"/></svg>
+                </button>
+              </span>
+              <span class="field-meta"><small id="keyHint">保存后会以密码掩码显示。</small><button type="button" id="clearKeyButton">清除 Key</button></span>
+            </label>
+
+            <div class="field">
+              <span class="field-label"><strong>模型名称</strong><em>MODEL</em></span>
+              <div class="model-control">
+                <span class="input-shell select-shell">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2 14 8l4.8 2-4.8 2-2 4.8-2-4.8-4.8-2L10 8l2-4.8Z"/><path d="m18 16 .8 2 .2.2 2 .8-2 .8-.2.2-.8 2-.8-2-2-.8 2-.8Z"/></svg>
+                  <select id="model" required disabled>
+                    <option value="">请先获取模型列表</option>
+                  </select>
+                  <svg class="select-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5"/></svg>
+                </span>
+                <button class="fetch-button" type="button" id="fetchModelsButton">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8V4m0 0h-4m4 0-3.2 3.2A7 7 0 1 0 18.5 15"/></svg>
+                  <span id="fetchModelsButtonLabel">获取模型</span>
+                </button>
+              </div>
+              <small id="modelHint">填写 API 地址和 Key 后获取模型列表。</small>
+            </div>
+          </div>
+
+          <div class="connection-actions">
+            <button class="secondary" type="button" id="testButton">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6"/></svg><span id="testButtonLabel">测试连接</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="form-section style-section">
+          <header class="section-head">
+            <span class="section-number">02</span>
+            <div><h2>海报风格</h2></div>
+          </header>
+
+          <fieldset class="style-picker">
+            <legend class="visually-hidden">选择海报风格</legend>
+            <div class="style-grid">
+              <label class="style-option">
+                <input type="radio" name="posterStyle" value="swiss" checked />
+                <span class="style-card">
+                  <span class="style-preview style-preview--swiss" aria-hidden="true"><i></i><b>WRITE</b><em>CODE</em></span>
+                  <span class="style-copy"><strong><span>01</span> 瑞士编辑</strong><small>理性、强网格、信息效率高</small></span>
+                </span>
+              </label>
+              <label class="style-option">
+                <input type="radio" name="posterStyle" value="signal" />
+                <span class="style-card">
+                  <span class="style-preview style-preview--signal" aria-hidden="true"><i></i><b>WRITE_</b><em>ONLY</em></span>
+                  <span class="style-copy"><strong><span>02</span> 夜间信号</strong><small>数字、未来、系统感强</small></span>
+                </span>
+              </label>
+              <label class="style-option">
+                <input type="radio" name="posterStyle" value="collage" />
+                <span class="style-card">
+                  <span class="style-preview style-preview--collage" aria-hidden="true"><i></i><b>Write-Only</b><em>AI / BRIEF</em></span>
+                  <span class="style-copy"><strong><span>03</span> 拼贴杂志</strong><small>活泼、有手感、社交属性强</small></span>
+                </span>
+              </label>
+              <label class="style-option">
+                <input type="radio" name="posterStyle" value="oriental" />
+                <span class="style-card">
+                  <span class="style-preview style-preview--oriental" aria-hidden="true"><i></i><b>Write-Only</b><em>核心观点</em></span>
+                  <span class="style-copy"><strong><span>04</span> 东方编辑</strong><small>克制、文化、高级留白</small></span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+        </section>
+
+      </form>
+      <div class="status is-hidden" id="status" role="status"></div>
+    </main>
+    <script type="module" src="../options/index.ts"></script>
+  </body>
+</html>
