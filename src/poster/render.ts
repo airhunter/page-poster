@@ -8,6 +8,7 @@ const SANS =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif';
 const SERIF = '"Songti SC", "STSong", Georgia, "Times New Roman", serif';
 const MONO = 'ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace';
+export const ORIENTAL_WATERMARK = "海报摘要";
 
 interface FittedText {
   fontSize: number;
@@ -597,7 +598,7 @@ function drawOriental(context: CanvasRenderingContext2D, payload: PosterPayload)
   context.globalAlpha = 0.045;
   context.fillStyle = "#1d2422";
   context.font = `800 96px ${SERIF}`;
-  ["只", "写", "代", "码"].forEach((character, index) => {
+  [...ORIENTAL_WATERMARK].forEach((character, index) => {
     context.fillText(character, 925, 120 + index * 88);
   });
   context.restore();
