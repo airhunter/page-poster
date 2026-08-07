@@ -21,11 +21,22 @@
         </div>
       </header>
 
-      <aside class="save-dock" aria-label="保存全部设置">
-        <div><strong>全部设置</strong><small>模型连接 · 海报风格</small></div>
-        <button type="submit" form="settingsForm" id="saveButton">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4Z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/></svg><span id="saveButtonLabel">保存并关闭</span>
-        </button>
+      <aside class="save-dock" aria-label="配置文件与保存操作">
+        <div class="save-copy"><strong>全部设置</strong><small>模型连接 · 海报风格 · 导出文件含 API Key</small></div>
+        <div class="dock-actions">
+          <button class="dock-tool-button" type="button" id="importSettingsButton" disabled title="导入海报机配置">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10m0 0 4-4m-4 4-4-4M5 15v4h14v-4"/></svg>
+            <span>导入</span>
+          </button>
+          <button class="dock-tool-button" type="button" id="exportSettingsButton" disabled title="导出完整配置，文件包含 API Key">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14V4m0 0 4 4m-4-4-4 4M5 15v4h14v-4"/></svg>
+            <span>导出</span>
+          </button>
+          <button type="submit" form="settingsForm" id="saveButton">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4Z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/></svg><span id="saveButtonLabel">保存并关闭</span>
+          </button>
+        </div>
+        <input hidden id="settingsFileInput" type="file" accept=".json,application/json" />
       </aside>
 
       <form class="settings-card" id="settingsForm">
