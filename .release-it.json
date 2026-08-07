@@ -1,0 +1,27 @@
+{
+  "$schema": "https://unpkg.com/release-it@20/schema/release-it.json",
+  "git": {
+    "commitMessage": "chore(release): v${version}",
+    "requireCleanWorkingDir": true,
+    "tagName": "v${version}"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "v${version}",
+    "assets": [
+      ".output/PagePoster-v${version}-chrome.zip"
+    ]
+  },
+  "npm": {
+    "publish": false
+  },
+  "hooks": {
+    "after:bump": "pnpm verify && pnpm zip && pnpm release:check ${version} --check-zip"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    }
+  }
+}

@@ -16,6 +16,7 @@
 - 优先复制 PNG 到剪贴板；只有复制失败时才显示下载按钮。
 - “换一版”重新生成摘要；关闭弹窗不终止后台任务。
 - API Key 通过 WXT 的 `browser.storage.local` 保存在本机，不会通过 Chrome 同步。
+- 设置页支持导入、导出完整配置；导出的 JSON 包含明文 API Key，仅用于可信设备间迁移。
 - 文章、摘要和结果保存在 `browser.storage.session`，浏览器重启后清除。
 
 ## 本地安装
@@ -53,6 +54,19 @@ corepack pnpm zip
 正式扩展输出到 `.output/chrome-mv3`，ZIP 输出到 `.output/PagePoster-v0.1.0-chrome.zip`。
 
 项目不再直接依赖或调用 esbuild；开发、构建、打包和 Manifest 生成均由 WXT CLI 负责。`pnpm-lock.yaml` 中仍可能出现 esbuild，因为它是 WXT/Vite/Vitest 的间接底层依赖，不代表项目还保留了旧的 esbuild 构建脚本。
+
+## 发布
+
+项目使用 `release-it` 统一维护版本号、`CHANGELOG.md`、Git tag、GitHub Release 和 WXT ZIP 附件。发布前至少运行：
+
+```bash
+corepack pnpm release:check <version>
+corepack pnpm verify
+corepack pnpm zip
+corepack pnpm release:check --check-zip
+```
+
+完整流程、首次发布和发布后核对方式见 [RELEASE.md](RELEASE.md)。
 
 ## AI 接口约定
 
