@@ -64,8 +64,8 @@ export function assertShareablePage(rawUrl: string): void {
 
 export function toOriginPattern(rawUrl: string): string {
   const url = new URL(rawUrl);
-  if (!["http:", "https:"].includes(url.protocol)) {
-    throw new Error("API 地址必须使用 http 或 https");
+  if (url.protocol !== "https:") {
+    throw new Error("为保护文章内容和 API Key，API 地址必须使用 HTTPS");
   }
   return `${url.origin}/*`;
 }

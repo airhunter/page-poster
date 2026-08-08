@@ -74,6 +74,12 @@ h1 { max-width: 650px; margin: 0; font-size: clamp(40px, 5.4vw, 62px); line-heig
 #clearKeyButton { flex: 0 0 auto; padding: 0; border: 0; background: transparent; color: #b64d38; font-size: 11px; font-weight: 750; }
 #clearKeyButton:hover { color: #8e3423; text-decoration: underline; text-underline-offset: 3px; }
 
+.data-disclosure { display: flex; align-items: flex-start; gap: 12px; margin-top: 24px; padding: 15px 17px; border: 1px solid #d5e1da; border-radius: 15px; background: #edf4ef; color: #38534d; }
+.data-disclosure svg { flex: 0 0 auto; width: 21px; margin-top: 1px; fill: none; stroke: #2f6d60; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.data-disclosure p, .data-disclosure strong, .data-disclosure span { display: block; margin: 0; }
+.data-disclosure strong { margin-bottom: 4px; color: #244b43; font-size: 12px; }
+.data-disclosure span { font-size: 11px; line-height: 1.65; }
+
 .connection-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 28px; padding-top: 24px; border-top: 1px solid #e2e4de; }
 .connection-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 142px; min-height: 47px; padding: 0 19px; border-radius: 14px; font-weight: 760; transition: transform .18s, background .18s, box-shadow .18s; }
 .connection-actions button:hover { transform: translateY(-2px); }

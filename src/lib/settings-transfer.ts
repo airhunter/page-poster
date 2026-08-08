@@ -64,7 +64,7 @@ function normalizeSettings(
   if (!apiBaseUrl) throw new Error("配置文件中的 API 地址为空");
   try {
     const url = new URL(apiBaseUrl);
-    if (!["http:", "https:"].includes(url.protocol)) {
+    if (url.protocol !== "https:") {
       throw new Error("unsupported protocol");
     }
   } catch {

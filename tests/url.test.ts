@@ -67,4 +67,9 @@ describe("AI endpoint handling", () => {
       "https://models.example.com/*",
     );
   });
+
+  it("rejects insecure AI endpoints", () => {
+    expect(() => toOriginPattern("http://models.example.com/v1")).toThrow("HTTPS");
+    expect(() => toOriginPattern("file:///tmp/models")).toThrow("HTTPS");
+  });
 });

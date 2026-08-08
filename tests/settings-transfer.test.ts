@@ -67,10 +67,10 @@ describe("settings file transfer", () => {
     ).toThrow("配置文件中的海报风格不受支持");
   });
 
-  it("rejects malformed or non-http API addresses", () => {
+  it("rejects malformed or non-HTTPS API addresses", () => {
     const payload = JSON.parse(serializeSettingsFile(SETTINGS)) as Record<string, unknown>;
 
-    for (const apiBaseUrl of ["not a url", "file:///tmp/api"]) {
+    for (const apiBaseUrl of ["not a url", "file:///tmp/api", "http://api.example.com/v1"]) {
       expect(() =>
         parseSettingsFile(
           JSON.stringify({

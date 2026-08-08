@@ -34,7 +34,7 @@ corepack pnpm check
 2. 开启右上角“开发者模式”。
 3. 点击“加载已解压的扩展程序”。
 4. 选择本项目的 `.output/chrome-mv3` 目录。
-5. 打开扩展设置，填写 API 地址和 API Key，获取并选择模型，选择海报风格后测试连接。
+5. 打开扩展设置，填写 HTTPS API 地址和 API Key，获取并选择模型，选择海报风格后测试连接。
 
 开发时可运行：
 
@@ -85,7 +85,7 @@ corepack pnpm release:check --check-zip
 }
 ```
 
-如果 API 地址已经以 `/chat/completions` 结尾，扩展不会再次追加路径。保存设置时，Chrome 只请求该 API origin 的运行时权限；扩展不会申请长期读取所有网页的权限。
+如果 HTTPS API 地址已经以 `/chat/completions` 结尾，扩展不会再次追加路径。保存设置时，Chrome 只请求该 API origin 的运行时权限；扩展不会申请长期读取所有网页的权限。
 
 ## 数据边界
 
@@ -119,4 +119,4 @@ tests            URL、长文采样、模型响应和 QR 往返测试
 - 社交信息流、复杂 Web App、iframe 正文
 - 手动编辑标题或摘要
 - AI 配图、历史记录、云同步
-- Chrome Web Store 发布流程
+- Chrome Web Store 后台自动上传与自动发布
