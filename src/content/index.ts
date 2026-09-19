@@ -1,5 +1,5 @@
-import { Readability } from "@mozilla/readability";
 import { isLikelyTitleCardImage } from "../lib/image";
+import { normalizeBodyText, parsePageContent } from "../lib/page-content";
 import type { ExtractedArticle } from "../types";
 
 declare global {
@@ -59,23 +59,12 @@ async function imageAsDataUrl(imageUrl?: string): Promise<string | undefined> {
   }
 }
 
-function normalizeBodyText(value: string): string {
-  const normalized = value
-    .replace(/\r/g, "")
-    .replace(/[\t\f\v ]+/g, " ")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-  if (normalized.length <= 50_000) return normalized;
-  return `${normalized.slice(0, 25_000)}\n\n${normalized.slice(-25_000)}`;
-}
-
 async function extractArticle(): Promise<ExtractedArticle> {
   if (document.contentType === "application/pdf") {
     throw new Error("第一版暂不支持 PDF");
   }
 
-  const clone = document.cloneNode(true) as Document;
-  const parsed = new Readability(clone, { charThreshold: 400 }).parse();
+  const parsed = parsePageContent(document);
   const text = normalizeBodyText(parsed?.textContent || "");
   if (!parsed || text.length < 500) {
     throw new Error("没有提取到足够的连续正文，这个页面暂不适合生成海报");

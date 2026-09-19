@@ -18,6 +18,9 @@ importers:
       '@release-it/conventional-changelog':
         specifier: ^11.0.1
         version: 11.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(release-it@20.2.1(magicast@0.5.4))
+      linkedom:
+        specifier: 0.18.13
+        version: 0.18.13
       release-it:
         specifier: ^20.0.0
         version: 20.2.1(magicast@0.5.4)
